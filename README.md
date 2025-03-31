@@ -1,0 +1,1 @@
+This project is just a fun idea and a way for me to learn. I hope everyone using it enjoys the experience! There are many things that still need fixing, but since I don’t have the funds right now, some issues might remain. However, I’ll keep improving and do better with my next idea. Thanks for checking it out!
