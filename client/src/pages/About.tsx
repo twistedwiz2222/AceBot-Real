@@ -72,13 +72,9 @@ export default function About() {
                 </div>
               </section>
               
-              <section>
-                <h2 className="text-2xl font-semibold mb-4">My Vision</h2>
-                <p className="text-lg">
-                  I envision a future where every student has access to personalized, high-quality education support
-                  that adapts to their unique learning style and pace. AceBot is committed to continuously improving
-                  my platform and Quizy to make complex science subjects more approachable and help students achieve 
-                  their academic goals.
+              <section className="text-center mt-12 border-t pt-8">
+                <p className="text-xl font-medium bg-gradient-to-r from-blue-500 to-primary text-transparent bg-clip-text inline-block">
+                  Created by Kabir Sinha
                 </p>
               </section>
             </div>
