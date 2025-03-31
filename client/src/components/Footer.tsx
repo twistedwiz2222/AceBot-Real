@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-center gap-16">
           <div className="text-center">
-            <h3 className="text-lg font-semibold mb-4 font-sans">EduAI</h3>
-            <p className="text-gray-300 text-sm max-w-sm">Your AI learning companion for CBSE science subjects, JEE Mains and BITSAT preparation.</p>
+            <h3 className="text-lg font-semibold mb-4 font-sans">AceBot</h3>
+            <p className="text-gray-300 text-sm max-w-sm">Your AI learning companion featuring Quizy for CBSE science subjects, JEE Mains and BITSAT preparation.</p>
           </div>
           
           <div className="text-center">
@@ -32,7 +32,7 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-gray-700 dark:border-gray-800 mt-8 pt-8 flex justify-center">
-          <p className="text-sm text-gray-400">© {new Date().getFullYear()} EduAI. All rights reserved.</p>
+          <p className="text-sm text-gray-400">© {new Date().getFullYear()} AceBot. All rights reserved.</p>
         </div>
       </div>
     </footer>

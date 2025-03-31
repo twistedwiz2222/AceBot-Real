@@ -35,7 +35,7 @@ export default function ChatInterface({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "👋 Hi there! I'm your EduAI assistant for CBSE Class 11-12, JEE, and BITSAT preparation. What would you like help with today?",
+      content: "👋 Hi there! I'm Quizy, your AceBot assistant for CBSE Class 11-12, JEE, and BITSAT preparation. What would you like help with today?",
     }
   ]);
   const [inputValue, setInputValue] = useState("");
