@@ -12,22 +12,22 @@ export default function Footer() {
           </div>
           
           <div className="text-center">
-            <h3 className="text-base font-semibold mb-4 font-sans">Subjects</h3>
+            <h3 className="text-base font-semibold mb-4 font-sans">Subjects We Can Help Enhance</h3>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="#" className="hover:text-white">Physics</Link></li>
-              <li><Link href="#" className="hover:text-white">Chemistry</Link></li>
-              <li><Link href="#" className="hover:text-white">Mathematics</Link></li>
-              <li><Link href="#" className="hover:text-white">Biology</Link></li>
+              <li>Physics</li>
+              <li>Chemistry</li>
+              <li>Mathematics</li>
+              <li>Biology</li>
             </ul>
           </div>
           
           <div className="text-center">
-            <h3 className="text-base font-semibold mb-4 font-sans">Exams</h3>
+            <h3 className="text-base font-semibold mb-4 font-sans">Exams We Support</h3>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="#" className="hover:text-white">CBSE Boards</Link></li>
-              <li><Link href="#" className="hover:text-white">JEE Mains</Link></li>
-              <li><Link href="#" className="hover:text-white">BITSAT</Link></li>
-              <li><Link href="#" className="hover:text-white">Study Resources</Link></li>
+              <li>CBSE Boards</li>
+              <li>JEE Mains</li>
+              <li>BITSAT</li>
+              <li>Study Resources</li>
             </ul>
           </div>
         </div>
