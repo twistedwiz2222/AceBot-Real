@@ -27,7 +27,6 @@ export default function Footer() {
               <li>CBSE Boards</li>
               <li>JEE Mains</li>
               <li>BITSAT</li>
-              <li>Study Resources</li>
             </ul>
           </div>
         </div>
