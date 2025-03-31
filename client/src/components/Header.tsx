@@ -22,17 +22,17 @@ export default function Header() {
           </div>
           
           <nav className="hidden md:flex space-x-8">
-            <Link href="/">
-              <a className="text-foreground hover:text-primary font-medium">Home</a>
+            <Link href="/" className="text-foreground hover:text-primary font-medium">
+              Home
             </Link>
-            <Link href="/about">
-              <a className="text-foreground hover:text-primary font-medium">About</a>
+            <Link href="/about" className="text-foreground hover:text-primary font-medium">
+              About
             </Link>
-            <Link href="/exams">
-              <a className="text-foreground hover:text-primary font-medium">Exams</a>
+            <Link href="/exams" className="text-foreground hover:text-primary font-medium">
+              Exams
             </Link>
-            <Link href="/resources">
-              <a className="text-foreground hover:text-primary font-medium">Resources</a>
+            <Link href="/resources" className="text-foreground hover:text-primary font-medium">
+              Resources
             </Link>
           </nav>
           
