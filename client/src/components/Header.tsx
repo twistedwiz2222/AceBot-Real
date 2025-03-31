@@ -15,9 +15,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <svg className="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
+            <img 
+              src="/acebot-logo.svg" 
+              alt="AceBot Logo" 
+              className="h-10 w-auto" 
+            />
             <span className="ml-2 text-xl font-bold text-primary">AceBot</span>
           </div>
           

@@ -31,7 +31,12 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-gray-700 dark:border-gray-800 mt-8 pt-8 flex justify-center">
+        <div className="border-t border-gray-700 dark:border-gray-800 mt-8 pt-8 flex flex-col items-center justify-center space-y-4">
+          <img 
+            src="/acebot-logo.svg" 
+            alt="AceBot Logo" 
+            className="h-10 w-auto" 
+          />
           <p className="text-sm text-gray-400">© {new Date().getFullYear()} AceBot. All rights reserved.</p>
         </div>
       </div>

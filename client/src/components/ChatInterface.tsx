@@ -138,7 +138,11 @@ export default function ChatInterface({
           <div key={index} className={`flex ${message.role === "user" ? "justify-end" : ""}`}>
             {message.role === "assistant" && (
               <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
-                <CheckCircle className="h-5 w-5" />
+                <img 
+                  src="/favicon.svg" 
+                  alt="Quizy" 
+                  className="h-6 w-6" 
+                />
               </div>
             )}
             
@@ -176,7 +180,11 @@ export default function ChatInterface({
         {chatMutation.isPending && (
           <div className="flex items-center">
             <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
-              <CheckCircle className="h-5 w-5" />
+              <img 
+                src="/favicon.svg" 
+                alt="Quizy" 
+                className="h-6 w-6 animate-pulse" 
+              />
             </div>
             <div className="ml-3 py-3">
               <div className="flex space-x-1">

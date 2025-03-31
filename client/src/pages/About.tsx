@@ -10,9 +10,16 @@ export default function About() {
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">
-              About AceBot
-            </h1>
+            <div className="flex flex-col items-center mb-6">
+              <img 
+                src="/acebot-logo.svg" 
+                alt="AceBot Logo" 
+                className="h-20 w-auto mb-4" 
+              />
+              <h1 className="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">
+                About AceBot
+              </h1>
+            </div>
             
             <div className="space-y-8 text-foreground">
               <section>
