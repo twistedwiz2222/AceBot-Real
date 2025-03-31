@@ -26,26 +26,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = requestSchema.parse(req.body);
       
-      // Generate AI response
-      const aiResponse = await generateAIResponse(
-        validatedData.question,
-        validatedData.subject,
-        validatedData.examType
-      );
-      
-      // Save the conversation to storage
-      const message = await storage.saveMessage({
-        question: validatedData.question,
-        answer: aiResponse,
-        subject: validatedData.subject,
-        examType: validatedData.examType
-      });
-      
-      res.json({ 
-        id: message.id,
-        answer: aiResponse,
-        timestamp: message.timestamp 
-      });
+      try {
+        // Generate AI response
+        const aiResponse = await generateAIResponse(
+          validatedData.question,
+          validatedData.subject,
+          validatedData.examType
+        );
+        
+        // Save the conversation to storage
+        const message = await storage.saveMessage({
+          question: validatedData.question,
+          answer: aiResponse,
+          subject: validatedData.subject,
+          examType: validatedData.examType
+        });
+        
+        res.json({ 
+          id: message.id,
+          answer: aiResponse,
+          timestamp: message.timestamp,
+          isFallback: false
+        });
+      } catch (apiError: any) {
+        // Check if it's a rate limit or quota error (should be handled in generateAIResponse)
+        // But we'll add another fallback here just in case
+        console.warn("Error with OpenAI API, providing fallback response");
+        
+        // Generate a simple fallback response
+        let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't process your request right now. 
+
+Here are some resources for your question about ${validatedData.subject || "this topic"}:
+
+1. For CBSE Class 11-12 content: Refer to NCERT textbooks which cover the fundamentals thoroughly
+2. For JEE preparation: H.C. Verma's "Concepts of Physics", MS Chouhan for Organic Chemistry, and RD Sharma for Mathematics
+3. For BITSAT: Focus on NCERT books first, then move to specialized books
+
+Please try again later when the system load has reduced.`;
+        
+        // Save the fallback response
+        const message = await storage.saveMessage({
+          question: validatedData.question,
+          answer: fallbackResponse,
+          subject: validatedData.subject,
+          examType: validatedData.examType
+        });
+        
+        // Send back the fallback response with a 200 status
+        res.json({ 
+          id: message.id,
+          answer: fallbackResponse,
+          timestamp: message.timestamp,
+          isFallback: true
+        });
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ message: error.errors[0].message });

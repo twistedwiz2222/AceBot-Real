@@ -119,19 +119,19 @@ Here are some resources for your question about ${subject || "this topic"}:
 
         if (question.toLowerCase().includes("physics") || subject === "Physics") {
           fallbackResponse += `\n\nFor Physics specifically:
-- Mechanics: Focus on Newton's Laws, Conservation principles, and Rotational dynamics
-- Electromagnetism: Understand Gauss's Law, Ampere's Law, and electromagnetic induction
-- Modern Physics: Quantum phenomena and nuclear physics concepts are important`;
+- Mechanics: See chapters 1-11 in H.C. Verma Vol. 1 covering Newton's Laws, Conservation principles, and Rotational dynamics
+- Electromagnetism: Refer to chapters 29-34 in H.C. Verma Vol. 2 for detailed explanations of Gauss's Law, Ampere's Law, and electromagnetic induction
+- Modern Physics: Study chapters 41-47 in H.C. Verma Vol. 2 for quantum phenomena and nuclear physics concepts`;
         } else if (question.toLowerCase().includes("chemistry") || subject === "Chemistry") {
           fallbackResponse += `\n\nFor Chemistry specifically:
-- Physical Chemistry: Thermodynamics, Chemical Equilibrium, and Electrochemistry
-- Organic Chemistry: Reaction mechanisms and functional group properties
-- Inorganic Chemistry: Periodic trends and coordination compounds`;
+- Physical Chemistry: Review NCERT Class 11 (chapters 5-9) and Class 12 (chapters 1-5) for Thermodynamics, Chemical Equilibrium, and Electrochemistry
+- Organic Chemistry: Study MS Chouhan's book which covers reaction mechanisms and functional group properties in detail, especially chapters 10-15
+- Inorganic Chemistry: Use NCERT books which explain periodic trends and coordination compounds clearly in Class 11 (chapters 2-4) and Class 12 (chapters 7-9)`;
         } else if (question.toLowerCase().includes("math") || subject === "Mathematics") {
           fallbackResponse += `\n\nFor Mathematics specifically:
-- Calculus: Limits, Differentiation, Integration and their applications
-- Algebra: Complex numbers, Matrices, and Probability
-- Coordinate Geometry: Conic sections and 3D geometry`;
+- Calculus: See RD Sharma Class 12 (chapters 5-20) which covers Limits, Differentiation, Integration and their applications thoroughly
+- Algebra: Review RD Sharma Class 11 (chapters 13-18) for Complex numbers, Matrices, and Probability
+- Coordinate Geometry: Study chapters 8-12 in RD Sharma Class 11 for conic sections and 3D geometry`;
         }
 
         fallbackResponse += `\n\nPlease try again later when the system load has reduced.`;

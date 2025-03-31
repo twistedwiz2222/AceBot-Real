@@ -65,11 +65,31 @@ export default function ChatInterface({
           timestamp: new Date()
         }
       ]);
+
+      // If this is a fallback response, show a toast notification
+      if (data.isFallback) {
+        toast({
+          title: "Using Offline Mode",
+          description: "Using textbook-based response due to high server load. Your API key may have reached its limit.",
+          variant: "destructive",
+          duration: 5000
+        });
+      }
     },
     onError: (error) => {
+      // Add the error message to the chat as if it was an assistant message
+      setMessages(prev => [
+        ...prev,
+        { 
+          role: "assistant", 
+          content: "I apologize, but I'm currently experiencing technical difficulties. Please check your internet connection and try again. If the problem persists, it might be due to API rate limits or server issues.",
+          timestamp: new Date()
+        }
+      ]);
+      
       toast({
         title: "Error",
-        description: "Failed to get response. Please try again.",
+        description: "Failed to get response. Please try again later.",
         variant: "destructive"
       });
     }
