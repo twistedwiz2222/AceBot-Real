@@ -5,9 +5,6 @@ import HeroSection from "@/components/HeroSection";
 import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
 import FeaturesSection from "@/components/FeaturesSection";
-import BookAnalysis from "@/components/BookAnalysis";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, MessageCircle } from "lucide-react";
 
 export default function Home() {
   const [selectedSubjects, setSelectedSubjects] = React.useState<string[]>([
@@ -18,7 +15,6 @@ export default function Home() {
   ]);
   
   const [selectedExamType, setSelectedExamType] = React.useState<string>("All");
-  const [activeTab, setActiveTab] = React.useState("chat");
   
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects((prev) => {
@@ -50,30 +46,10 @@ export default function Home() {
           />
           
           <div className="w-full md:w-3/4">
-            <Tabs defaultValue="chat" value={activeTab} onValueChange={setActiveTab} className="mb-6">
-              <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-                <TabsTrigger value="chat" className="flex items-center gap-2">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>AI Chat</span>
-                </TabsTrigger>
-                <TabsTrigger value="books" className="flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>Physics Books</span>
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="chat">
-                <ChatInterface 
-                  selectedSubjects={selectedSubjects} 
-                  selectedExamType={selectedExamType} 
-                />
-              </TabsContent>
-              
-              <TabsContent value="books">
-                <BookAnalysis />
-              </TabsContent>
-            </Tabs>
-            
+            <ChatInterface 
+              selectedSubjects={selectedSubjects} 
+              selectedExamType={selectedExamType} 
+            />
             <FeaturesSection />
           </div>
         </div>
