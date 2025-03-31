@@ -137,12 +137,8 @@ export default function ChatInterface({
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.role === "user" ? "justify-end" : ""}`}>
             {message.role === "assistant" && (
-              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
-                <img 
-                  src="/favicon.svg" 
-                  alt="Quizy" 
-                  className="h-6 w-6" 
-                />
+              <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white flex-shrink-0">
+                Q
               </div>
             )}
             
@@ -179,12 +175,8 @@ export default function ChatInterface({
         {/* Loading indicator */}
         {chatMutation.isPending && (
           <div className="flex items-center">
-            <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
-              <img 
-                src="/favicon.svg" 
-                alt="Quizy" 
-                className="h-6 w-6 animate-pulse" 
-              />
+            <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white flex-shrink-0 animate-pulse">
+              Q
             </div>
             <div className="ml-3 py-3">
               <div className="flex space-x-1">
