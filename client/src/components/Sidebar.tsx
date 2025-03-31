@@ -1,6 +1,4 @@
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
 interface SidebarProps {
@@ -47,18 +45,17 @@ export default function Sidebar({
     <aside className="w-full md:w-1/4">
       <div className="bg-card dark:bg-card rounded-lg shadow-sm border dark:border-gray-800 p-6 mb-6">
         <h2 className="font-semibold text-lg mb-4 font-sans">Subjects</h2>
-        <div className="space-y-2">
+        <ul className="space-y-2 list-disc pl-5">
           {["Physics", "Chemistry", "Mathematics", "Biology"].map((subject) => (
-            <div key={subject} className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent">
-              <Checkbox 
-                id={`subject-${subject}`}
-                checked={selectedSubjects.includes(subject)}
-                onCheckedChange={() => onSubjectChange(subject)}
-              />
-              <Label htmlFor={`subject-${subject}`}>{subject}</Label>
-            </div>
+            <li 
+              key={subject} 
+              className={`cursor-pointer p-1 rounded hover:bg-accent ${selectedSubjects.includes(subject) ? 'font-medium ' + subjectColors[subject] : ''}`}
+              onClick={() => onSubjectChange(subject)}
+            >
+              {subject}
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
       <div className="bg-card dark:bg-card rounded-lg shadow-sm border dark:border-gray-800 p-6">
