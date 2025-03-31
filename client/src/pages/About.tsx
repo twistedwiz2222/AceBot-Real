@@ -17,12 +17,11 @@ export default function About() {
             </div>
             
             <div className="space-y-8 text-foreground">
-              <section>
-                <h2 className="text-2xl font-semibold mb-4">My Mission</h2>
-                <p className="text-lg">
-                  AceBot is dedicated to revolutionizing CBSE Class 11-12 science education and exam preparation 
-                  through cutting-edge AI technology. I aim to make quality education more accessible, 
-                  personalized, and effective for students preparing for CBSE Boards, JEE Mains, and BITSAT.
+              <section className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-100 dark:border-blue-800 mb-8">
+                <p className="text-lg italic">
+                  This project is just a fun idea and a way for me to learn. I hope everyone using it enjoys the experience! 
+                  There are many things that still need fixing, but since I don't have the funds right now, some issues might remain. 
+                  However, I'll keep improving and do better with my next idea. Thanks for checking it out!
                 </p>
               </section>
               
