@@ -31,15 +31,7 @@ export default function Footer() {
             </ul>
           </div>
           
-          <div>
-            <h3 className="text-base font-semibold mb-4 font-sans">Contact</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="#"><a className="hover:text-white">Help Center</a></Link></li>
-              <li><Link href="#"><a className="hover:text-white">Feedback</a></Link></li>
-              <li><Link href="#"><a className="hover:text-white">Privacy Policy</a></Link></li>
-              <li><Link href="#"><a className="hover:text-white">Terms of Service</a></Link></li>
-            </ul>
-          </div>
+
         </div>
         
         <div className="border-t border-gray-700 dark:border-gray-800 mt-8 pt-8 flex justify-center">

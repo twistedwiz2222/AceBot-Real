@@ -253,6 +253,102 @@ Please try again later for a more detailed, specific analysis.`;
     }
   });
 
+  // Biology Book Analysis route
+  app.post("/api/analyze-biology-book", async (req: Request, res: Response) => {
+    try {
+      const requestSchema = z.object({
+        bookName: z.string().min(1, "Book name is required"),
+        topic: z.string().optional(),
+        chapter: z.string().optional()
+      });
+
+      const validatedData = requestSchema.parse(req.body);
+      
+      try {
+        // Analyze the biology book
+        const analysis = await analyzeBiologyBook(
+          validatedData.bookName,
+          validatedData.topic,
+          validatedData.chapter
+        );
+        
+        // Save the analysis as a message
+        const message = await storage.saveMessage({
+          question: `Analyze biology book ${validatedData.bookName} ${validatedData.topic ? `on ${validatedData.topic}` : ''} ${validatedData.chapter ? `in chapter ${validatedData.chapter}` : ''}`,
+          answer: analysis,
+          subject: "Biology",
+          examType: "All"
+        });
+        
+        res.json({ 
+          id: message.id,
+          analysis: analysis,
+          bookName: validatedData.bookName,
+          topic: validatedData.topic,
+          chapter: validatedData.chapter,
+          timestamp: message.timestamp,
+          isFallback: false
+        });
+      } catch (apiError: any) {
+        // Check if it's a rate limit or quota error
+        if (apiError.status === 429 || (apiError.error && apiError.error.type === 'insufficient_quota')) {
+          console.warn("OpenAI API quota exceeded or rate limited for biology book analysis. Using fallback.");
+          
+          // Generate a simple fallback response
+          let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't provide a detailed analysis of "${validatedData.bookName}" right now.
+          
+Here's some general information about NCERT Biology textbooks for Class 11-12:
+
+NCERT Biology textbooks are comprehensive resources that cover the entire CBSE curriculum and form an excellent foundation for competitive exams like NEET, JEE, and BITSAT.
+
+For Class 11, key units include:
+- Diversity in Living World (Units 1-2): Classification, kingdoms, taxonomic categories
+- Cell Structure and Functions (Unit 3): Cell theory, cell membrane, organelles
+- Plant Physiology (Unit 4): Transport, mineral nutrition, photosynthesis, respiration
+- Human Physiology (Unit 5): Digestion, breathing, circulation, excretion
+
+For Class 12, important units include:
+- Reproduction (Unit 1): Asexual, sexual reproduction, human reproduction
+- Genetics and Evolution (Unit 2): Inheritance, molecular basis of inheritance, evolution
+- Biology in Human Welfare (Unit 3): Health, diseases, food production improvements
+- Biotechnology (Unit 4): Principles, applications in health and agriculture
+- Ecology (Unit 5): Organisms and environment, biodiversity, environmental issues
+
+Please try again later for a more detailed, specific analysis.`;
+          
+          // Save the fallback response
+          const message = await storage.saveMessage({
+            question: `Analyze biology book ${validatedData.bookName} ${validatedData.topic ? `on ${validatedData.topic}` : ''} ${validatedData.chapter ? `in chapter ${validatedData.chapter}` : ''}`,
+            answer: fallbackResponse,
+            subject: "Biology",
+            examType: "All"
+          });
+          
+          // Send back the fallback response with a 200 status
+          res.json({ 
+            id: message.id,
+            analysis: fallbackResponse,
+            bookName: validatedData.bookName,
+            topic: validatedData.topic,
+            chapter: validatedData.chapter,
+            timestamp: message.timestamp,
+            isFallback: true
+          });
+        } else {
+          // For other API errors, rethrow
+          throw apiError;
+        }
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        console.error("Error in analyze-biology-book endpoint:", error);
+        res.status(500).json({ message: "An error occurred while analyzing the biology book." });
+      }
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
