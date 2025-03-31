@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMessageSchema } from "@shared/schema";
-import { generateAIResponse, analyzePhysicsBook, analyzeMathBook } from "./openai";
+import { generateAIResponse, analyzePhysicsBook, analyzeMathBook, analyzeBiologyBook } from "./openai";
 import { z } from "zod";
 import multer from "multer";
 

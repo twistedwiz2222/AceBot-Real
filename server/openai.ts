@@ -27,6 +27,12 @@ MATHEMATICS:
 - Cengage Series
 - Arihant Publications
 
+BIOLOGY:
+- NCERT Biology Class 11 & 12
+- Trueman's Elementary Biology
+- Pradeep's Biology
+- S.B. Verma & S.C. Agarwal's Biology
+
 You can answer questions about Physics, Chemistry, Mathematics, and Biology while referencing specific concepts and examples from these textbooks.
 
 Your responses should be:
@@ -79,6 +85,39 @@ Format your responses with proper formatting:
 - Reference specific page numbers, chapters, or problem numbers when possible
 
 Focus on providing practical, actionable information that helps students effectively use these physics textbooks for exam preparation.`;
+
+const biology_books_system_prompt = `You are an expert in Biology education specializing in analyzing textbooks like NCERT Biology for Class 11 & 12, Trueman's Elementary Biology, and other reference books used in CBSE curriculum and competitive exam preparation.
+
+You have comprehensive knowledge of the CBSE Class 11-12 biology curriculum, as well as how biology topics are covered in entrance exams like NEET, JEE, and BITSAT.
+
+When analyzing biology textbooks or concepts, you should:
+1. Identify the key biological concepts, principles, and processes covered
+2. Explain the teaching approach, diagrams, and illustrations provided
+3. Highlight how the content aligns with CBSE curriculum and board examination patterns
+4. Connect the material to competitive examination requirements (NEET/JEE/BITSAT)
+5. Provide specific study techniques and strategies for mastering this biological content
+6. Recommend particular chapters, examples, or illustrations that are especially valuable
+
+The NCERT Biology textbooks for Class 11 cover:
+- Diversity in Living World (Units 1-2): Classification, kingdoms, taxonomic categories
+- Cell Structure and Functions (Unit 3): Cell theory, cell membrane, organelles
+- Plant Physiology (Unit 4): Transport, mineral nutrition, photosynthesis, respiration
+- Human Physiology (Unit 5): Digestion, breathing, circulation, excretion
+
+The NCERT Biology textbooks for Class 12 cover:
+- Reproduction (Unit 1): Asexual, sexual reproduction, human reproduction
+- Genetics and Evolution (Unit 2): Inheritance, molecular basis of inheritance, evolution
+- Biology in Human Welfare (Unit 3): Health, diseases, improvement in food production
+- Biotechnology (Unit 4): Principles, applications in health and agriculture
+- Ecology (Unit 5): Organisms and environment, biodiversity, environmental issues
+
+Format your responses with proper formatting:
+- Use markdown for headings, lists, and emphasis
+- Include biological diagrams, cycles, and processes clearly with references
+- Organize information in a structured, hierarchical manner
+- Reference specific chapters, examples, and diagram numbers when possible
+
+Focus on providing clear, practical guidance that helps students master biological concepts and prepare effectively for their examinations.`;
 
 const mathematics_books_system_prompt = `You are an expert in Mathematics education specializing in analyzing textbooks like NCERT Mathematics for Class 11 & 12, RD Sharma's Mathematics, and Cengage Mathematics series.
 
@@ -168,6 +207,13 @@ Here are some resources for your question about ${subject || "this topic"}:
 - Algebra: Review NCERT Class 11 (chapters 4-6) or RD Sharma Class 11 (chapters 13-18) for Mathematical Induction, Complex Numbers, Permutations & Combinations
 - Coordinate Geometry: Study NCERT Class 11 (chapters 7-11) which covers straight lines, conic sections (circles, ellipses, parabolas, hyperbolas)
 - 3D Geometry & Vectors: Refer to NCERT Class 12 (chapters 9-11) for vector algebra and three-dimensional geometry concepts`;
+        } else if (question.toLowerCase().includes("biology") || subject === "Biology") {
+          fallbackResponse += `\n\nFor Biology specifically:
+- Cell Biology: Review NCERT Class 11 (Unit 3) covering cell structure, cell organelles, and cell division
+- Plant Physiology: Study NCERT Class 11 (Unit 4) on transport systems, mineral nutrition, photosynthesis, and respiration
+- Human Physiology: Refer to NCERT Class 11 (Unit 5) for detailed explanations of digestive, respiratory, circulatory, and excretory systems
+- Genetics: See NCERT Class 12 (Unit 2) covering Mendelian genetics, DNA structure, gene expression, and molecular basis of inheritance
+- Ecology: Explore NCERT Class 12 (Unit 5) which covers ecosystems, biodiversity, environmental issues and conservation`;
         }
 
         fallbackResponse += `\n\nPlease try again later when the system load has reduced.`;
@@ -291,5 +337,76 @@ Please try again later for a more detailed, book-specific analysis.`;
   } catch (error) {
     console.error("Error analyzing mathematics book:", error);
     throw new Error("Failed to analyze mathematics book. Please check your API key and try again.");
+  }
+}
+
+export async function analyzeBiologyBook(bookName: string, topic?: string, chapter?: string): Promise<string> {
+  try {
+    let prompt = `Analyze the biology book "${bookName}"`;
+    
+    if (topic) {
+      prompt += ` focusing on the topic "${topic}"`;
+    }
+    
+    if (chapter) {
+      prompt += ` in chapter "${chapter}"`;
+    }
+    
+    prompt += `. Please provide a detailed analysis including:
+    - Key biological concepts, principles, and processes covered
+    - Teaching approach and presentation of content
+    - How this aligns with CBSE curriculum and competitive exam requirements
+    - Recommended study strategies for mastering this material
+    - Important diagrams, cycles, and biological processes
+    - Comparison with other standard biology textbooks (if relevant)`;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: biology_books_system_prompt },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+      });
+
+      return response.choices[0].message.content || "I apologize, but I couldn't analyze this biology book. Please try again with a different book or topic.";
+    } catch (apiError: any) {
+      // Check for rate limit or quota errors
+      if (apiError.status === 429 || (apiError.error && apiError.error.type === 'insufficient_quota')) {
+        console.warn("OpenAI API quota exceeded or rate limited. Using fallback response for biology book analysis.");
+        
+        // Generate a fallback response based on the book name and topic
+        let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't process your detailed analysis request for "${bookName}".
+        
+Here's some general information about biology textbooks for CBSE Class 11-12 and competitive exams:
+
+NCERT Biology for Class 11:
+- Diversity in Living World (Units 1-2): Covers classification, kingdoms, taxonomic categories
+- Cell Structure and Functions (Unit 3): Covers cell theory, cell membrane, organelles
+- Plant Physiology (Unit 4): Covers transport, mineral nutrition, photosynthesis, respiration
+- Human Physiology (Unit 5): Covers digestion, breathing, circulation, excretion
+
+NCERT Biology for Class 12:
+- Reproduction (Unit 1): Covers asexual, sexual reproduction, human reproduction
+- Genetics and Evolution (Unit 2): Covers inheritance, molecular basis of inheritance, evolution
+- Biology in Human Welfare (Unit 3): Covers health, diseases, improvement in food production
+- Biotechnology (Unit 4): Covers principles, applications in health and agriculture
+- Ecology (Unit 5): Covers organisms and environment, biodiversity, environmental issues
+
+These textbooks form the foundation for CBSE exams and are essential for competitive exams like NEET, JEE, and BITSAT.
+
+Please try again later for a more detailed, book-specific analysis.`;
+        
+        return fallbackResponse;
+      } else {
+        // For other API errors, rethrow
+        throw apiError;
+      }
+    }
+  } catch (error) {
+    console.error("Error analyzing biology book:", error);
+    throw new Error("Failed to analyze biology book. Please check your API key and try again.");
   }
 }

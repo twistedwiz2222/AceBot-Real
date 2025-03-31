@@ -14,8 +14,6 @@ export default function Home() {
     "Biology",
   ]);
   
-  const [selectedExamType, setSelectedExamType] = React.useState<string>("All");
-  
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects((prev) => {
       if (prev.includes(subject)) {
@@ -24,10 +22,6 @@ export default function Home() {
         return [...prev, subject];
       }
     });
-  };
-
-  const handleExamTypeChange = (examType: string) => {
-    setSelectedExamType(examType);
   };
 
   return (
@@ -40,15 +34,13 @@ export default function Home() {
         <div className="flex flex-col md:flex-row gap-8">
           <Sidebar 
             selectedSubjects={selectedSubjects} 
-            onSubjectChange={handleSubjectChange} 
-            selectedExamType={selectedExamType}
-            onExamTypeChange={handleExamTypeChange}
+            onSubjectChange={handleSubjectChange}
           />
           
           <div className="w-full md:w-3/4">
             <ChatInterface 
               selectedSubjects={selectedSubjects} 
-              selectedExamType={selectedExamType} 
+              selectedExamType="All" 
             />
             <FeaturesSection />
           </div>

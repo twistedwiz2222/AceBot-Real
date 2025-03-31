@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 interface SidebarProps {
   selectedSubjects: string[];
   onSubjectChange: (subject: string) => void;
-  selectedExamType: string;
-  onExamTypeChange: (examType: string) => void;
 }
 
 interface TopicItem {
@@ -36,9 +34,7 @@ const quickTopics: TopicItem[] = [
 
 export default function Sidebar({
   selectedSubjects,
-  onSubjectChange,
-  selectedExamType,
-  onExamTypeChange
+  onSubjectChange
 }: SidebarProps) {
   const subjectColors: Record<string, string> = {
     "Physics": "text-primary",
@@ -63,21 +59,6 @@ export default function Sidebar({
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="bg-card dark:bg-card rounded-lg shadow-sm border dark:border-gray-800 p-6 mb-6">
-        <h2 className="font-semibold text-lg mb-4 font-sans">Exam Focus</h2>
-        <RadioGroup 
-          value={selectedExamType} 
-          onValueChange={onExamTypeChange}
-        >
-          {["All", "CBSE Boards", "JEE Mains", "BITSAT"].map((examType) => (
-            <div key={examType} className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-accent">
-              <RadioGroupItem value={examType} id={`exam-${examType}`} />
-              <Label htmlFor={`exam-${examType}`}>{examType}</Label>
-            </div>
-          ))}
-        </RadioGroup>
       </div>
 
       <div className="bg-card dark:bg-card rounded-lg shadow-sm border dark:border-gray-800 p-6">
