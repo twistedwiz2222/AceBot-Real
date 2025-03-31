@@ -54,17 +54,57 @@ export async function generateAIResponse(question: string, subject?: string, exa
       if (examType) prompt += `\nExam Focus: ${examType}`;
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: system_prompt },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 1500,
-    });
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: system_prompt },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 1500,
+      });
 
-    return response.choices[0].message.content || "I apologize, but I couldn't generate a response. Please try again.";
+      return response.choices[0].message.content || "I apologize, but I couldn't generate a response. Please try again.";
+    } catch (apiError: any) {
+      // Check for rate limit or quota errors
+      if (apiError.status === 429 || (apiError.error && apiError.error.type === 'insufficient_quota')) {
+        console.warn("OpenAI API quota exceeded or rate limited. Using fallback response mode.");
+        
+        // Generate a fallback response based on the question and subject
+        let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't process your request right now. 
+
+Here are some resources for your question about ${subject || "this topic"}:
+
+1. For CBSE Class 11-12 content: Refer to NCERT textbooks which cover the fundamentals thoroughly
+2. For JEE preparation: H.C. Verma's "Concepts of Physics" and D.C. Pandey series are highly recommended
+3. For BITSAT: Focus on NCERT books first, then move to specialized books like Arihant's BITSAT guides`;
+
+        if (question.toLowerCase().includes("physics") || subject === "Physics") {
+          fallbackResponse += `\n\nFor Physics specifically:
+- Mechanics: Focus on Newton's Laws, Conservation principles, and Rotational dynamics
+- Electromagnetism: Understand Gauss's Law, Ampere's Law, and electromagnetic induction
+- Modern Physics: Quantum phenomena and nuclear physics concepts are important`;
+        } else if (question.toLowerCase().includes("chemistry") || subject === "Chemistry") {
+          fallbackResponse += `\n\nFor Chemistry specifically:
+- Physical Chemistry: Thermodynamics, Chemical Equilibrium, and Electrochemistry
+- Organic Chemistry: Reaction mechanisms and functional group properties
+- Inorganic Chemistry: Periodic trends and coordination compounds`;
+        } else if (question.toLowerCase().includes("math") || subject === "Mathematics") {
+          fallbackResponse += `\n\nFor Mathematics specifically:
+- Calculus: Limits, Differentiation, Integration and their applications
+- Algebra: Complex numbers, Matrices, and Probability
+- Coordinate Geometry: Conic sections and 3D geometry`;
+        }
+
+        fallbackResponse += `\n\nPlease try again later when the system load has reduced.`;
+        
+        return fallbackResponse;
+      } else {
+        // For other API errors, rethrow
+        throw apiError;
+      }
+    }
   } catch (error) {
     console.error("Error generating AI response:", error);
     throw new Error("Failed to generate AI response. Please check your API key and try again.");
