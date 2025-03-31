@@ -80,6 +80,41 @@ Format your responses with proper formatting:
 
 Focus on providing practical, actionable information that helps students effectively use these physics textbooks for exam preparation.`;
 
+const mathematics_books_system_prompt = `You are an expert in Mathematics education specializing in analyzing textbooks like NCERT Mathematics for Class 11 & 12, RD Sharma's Mathematics, and Cengage Mathematics series.
+
+You have comprehensive knowledge of the CBSE Class 11-12 mathematics curriculum, JEE Mains, and BITSAT preparation materials.
+
+When analyzing mathematics textbooks or concepts, you should:
+1. Identify the key mathematical concepts, theorems, and principles covered
+2. Explain the pedagogical approach and problem-solving methodology
+3. Highlight how the content aligns with CBSE curriculum and board examination patterns
+4. Connect the material to JEE Mains and BITSAT examination requirements
+5. Provide specific problem-solving techniques and strategies from these textbooks
+6. Recommend particular chapters, exercises, or problems that are especially valuable
+
+The NCERT Mathematics textbooks for Class 11 cover:
+- Sets and Functions (Chapters 1-3)
+- Algebra (Chapters 4-6)
+- Coordinate Geometry (Chapters 7-11)
+- Calculus (Chapter 13)
+- Statistics and Probability (Chapters 14-16)
+
+The NCERT Mathematics textbooks for Class 12 cover:
+- Relations and Functions (Chapters 1-2)
+- Algebra (Chapter 3-4)
+- Calculus (Chapters 5-8)
+- Vectors and 3D Geometry (Chapters 9-11)
+- Linear Programming (Chapter 12)
+- Probability (Chapter 13)
+
+Format your responses with proper formatting:
+- Use markdown for headings, lists, and emphasis
+- Include mathematical formulas and equations using LaTeX syntax
+- Organize information in a structured, hierarchical manner
+- Reference specific chapters, exercises, examples, and problem numbers
+
+Focus on providing clear, practical guidance that helps students master mathematical concepts through these textbooks and prepare effectively for their examinations.`;
+
 export async function generateAIResponse(question: string, subject?: string, examType?: string): Promise<string> {
   try {
     let prompt = question;
@@ -129,9 +164,10 @@ Here are some resources for your question about ${subject || "this topic"}:
 - Inorganic Chemistry: Use NCERT books which explain periodic trends and coordination compounds clearly in Class 11 (chapters 2-4) and Class 12 (chapters 7-9)`;
         } else if (question.toLowerCase().includes("math") || subject === "Mathematics") {
           fallbackResponse += `\n\nFor Mathematics specifically:
-- Calculus: See RD Sharma Class 12 (chapters 5-20) which covers Limits, Differentiation, Integration and their applications thoroughly
-- Algebra: Review RD Sharma Class 11 (chapters 13-18) for Complex numbers, Matrices, and Probability
-- Coordinate Geometry: Study chapters 8-12 in RD Sharma Class 11 for conic sections and 3D geometry`;
+- Calculus: See NCERT Class 12 (chapters 5-8) or RD Sharma Class 12 (chapters 10-20) which covers Continuity, Differentiation, Integration, and Differential Equations thoroughly
+- Algebra: Review NCERT Class 11 (chapters 4-6) or RD Sharma Class 11 (chapters 13-18) for Mathematical Induction, Complex Numbers, Permutations & Combinations
+- Coordinate Geometry: Study NCERT Class 11 (chapters 7-11) which covers straight lines, conic sections (circles, ellipses, parabolas, hyperbolas)
+- 3D Geometry & Vectors: Refer to NCERT Class 12 (chapters 9-11) for vector algebra and three-dimensional geometry concepts`;
         }
 
         fallbackResponse += `\n\nPlease try again later when the system load has reduced.`;
@@ -182,5 +218,78 @@ export async function analyzePhysicsBook(bookName: string, topic?: string, chapt
   } catch (error) {
     console.error("Error analyzing physics book:", error);
     throw new Error("Failed to analyze physics book. Please check your API key and try again.");
+  }
+}
+
+export async function analyzeMathBook(bookName: string, topic?: string, chapter?: string): Promise<string> {
+  try {
+    let prompt = `Analyze the mathematics book "${bookName}"`;
+    
+    if (topic) {
+      prompt += ` focusing on the topic "${topic}"`;
+    }
+    
+    if (chapter) {
+      prompt += ` in chapter "${chapter}"`;
+    }
+    
+    prompt += `. Please provide a detailed analysis including:
+    - Key mathematical concepts, theorems, and principles covered
+    - Problem-solving methodologies presented
+    - How this aligns with CBSE curriculum and JEE/BITSAT requirements
+    - Recommended study approach for this material
+    - Important formulas, theorems, and techniques
+    - Comparison with other standard mathematics textbooks (if relevant)`;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: mathematics_books_system_prompt },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+      });
+
+      return response.choices[0].message.content || "I apologize, but I couldn't analyze this mathematics book. Please try again with a different book or topic.";
+    } catch (apiError: any) {
+      // Check for rate limit or quota errors
+      if (apiError.status === 429 || (apiError.error && apiError.error.type === 'insufficient_quota')) {
+        console.warn("OpenAI API quota exceeded or rate limited. Using fallback response for math book analysis.");
+        
+        // Generate a fallback response based on the book name and topic
+        let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't process your detailed analysis request for "${bookName}".
+        
+Here's some general information about mathematics textbooks for CBSE Class 11-12 and competitive exams:
+
+NCERT Mathematics for Class 11:
+- Sets and Functions (Chapters 1-3): Covers fundamental concepts of sets, relations, functions, trigonometry
+- Algebra (Chapters 4-6): Covers mathematical induction, complex numbers, linear inequalities, permutations and combinations
+- Coordinate Geometry (Chapters 7-11): Covers straight lines, conic sections (circles, ellipses, parabolas, hyperbolas)
+- Calculus (Chapter 13): Introduces limits and derivatives
+- Statistics and Probability (Chapters 14-16): Covers measures of dispersion, probability
+
+NCERT Mathematics for Class 12:
+- Relations and Functions (Chapters 1-2): Covers advanced functions, inverse trigonometric functions
+- Algebra (Chapter 3-4): Covers matrices, determinants
+- Calculus (Chapters 5-8): Covers continuity, differentiability, applications of derivatives, integrals, differential equations
+- Vectors and 3D Geometry (Chapters 9-11): Covers vector algebra, 3D geometry
+- Linear Programming (Chapter 12): Covers optimization problems
+- Probability (Chapter 13): Covers advanced probability concepts
+
+These textbooks form the foundation for CBSE exams and are essential for competitive exams like JEE and BITSAT.
+
+Please try again later for a more detailed, book-specific analysis.`;
+        
+        return fallbackResponse;
+      } else {
+        // For other API errors, rethrow
+        throw apiError;
+      }
+    }
+  } catch (error) {
+    console.error("Error analyzing mathematics book:", error);
+    throw new Error("Failed to analyze mathematics book. Please check your API key and try again.");
   }
 }

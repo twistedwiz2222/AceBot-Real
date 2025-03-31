@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMessageSchema } from "@shared/schema";
-import { generateAIResponse, analyzePhysicsBook } from "./openai";
+import { generateAIResponse, analyzePhysicsBook, analyzeMathBook } from "./openai";
 import { z } from "zod";
 import multer from "multer";
 
@@ -152,6 +152,103 @@ Please try again later when the system load has reduced.`;
       } else {
         console.error("Error in analyze-physics-book endpoint:", error);
         res.status(500).json({ message: "An error occurred while analyzing the physics book." });
+      }
+    }
+  });
+  
+  // Mathematics Book Analysis route
+  app.post("/api/analyze-math-book", async (req: Request, res: Response) => {
+    try {
+      const requestSchema = z.object({
+        bookName: z.string().min(1, "Book name is required"),
+        topic: z.string().optional(),
+        chapter: z.string().optional()
+      });
+
+      const validatedData = requestSchema.parse(req.body);
+      
+      try {
+        // Analyze the mathematics book
+        const analysis = await analyzeMathBook(
+          validatedData.bookName,
+          validatedData.topic,
+          validatedData.chapter
+        );
+        
+        // Save the analysis as a message
+        const message = await storage.saveMessage({
+          question: `Analyze mathematics book ${validatedData.bookName} ${validatedData.topic ? `on ${validatedData.topic}` : ''} ${validatedData.chapter ? `in chapter ${validatedData.chapter}` : ''}`,
+          answer: analysis,
+          subject: "Mathematics",
+          examType: "All"
+        });
+        
+        res.json({ 
+          id: message.id,
+          analysis: analysis,
+          bookName: validatedData.bookName,
+          topic: validatedData.topic,
+          chapter: validatedData.chapter,
+          timestamp: message.timestamp,
+          isFallback: false
+        });
+      } catch (apiError: any) {
+        // Check if it's a rate limit or quota error
+        if (apiError.status === 429 || (apiError.error && apiError.error.type === 'insufficient_quota')) {
+          console.warn("OpenAI API quota exceeded or rate limited for math book analysis. Using fallback.");
+          
+          // Generate a simple fallback response
+          let fallbackResponse = `I apologize, but I'm currently experiencing high demand and can't provide a detailed analysis of "${validatedData.bookName}" right now.
+          
+Here's some general information about NCERT Mathematics textbooks for Class 11-12:
+
+NCERT Mathematics textbooks are comprehensive resources that cover the entire CBSE curriculum and form an excellent foundation for competitive exams like JEE and BITSAT.
+
+For Class 11, key chapters include:
+- Sets, Relations and Functions (Chapters 1-3)
+- Algebra including Sequences and Series (Chapters 4-9)
+- Coordinate Geometry (Chapters 10-11)
+- Calculus introduction (Limits and Derivatives)
+- Statistics and Probability
+
+For Class 12, important sections include:
+- Relations and Functions including Inverse Trigonometric Functions
+- Algebra (Matrices and Determinants)
+- Calculus (Continuity, Differentiability, Integration, Differential Equations)
+- Vectors and 3D Geometry
+- Probability
+
+Please try again later for a more detailed, specific analysis.`;
+          
+          // Save the fallback response
+          const message = await storage.saveMessage({
+            question: `Analyze mathematics book ${validatedData.bookName} ${validatedData.topic ? `on ${validatedData.topic}` : ''} ${validatedData.chapter ? `in chapter ${validatedData.chapter}` : ''}`,
+            answer: fallbackResponse,
+            subject: "Mathematics",
+            examType: "All"
+          });
+          
+          // Send back the fallback response with a 200 status
+          res.json({ 
+            id: message.id,
+            analysis: fallbackResponse,
+            bookName: validatedData.bookName,
+            topic: validatedData.topic,
+            chapter: validatedData.chapter,
+            timestamp: message.timestamp,
+            isFallback: true
+          });
+        } else {
+          // For other API errors, rethrow
+          throw apiError;
+        }
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        console.error("Error in analyze-math-book endpoint:", error);
+        res.status(500).json({ message: "An error occurred while analyzing the mathematics book." });
       }
     }
   });
